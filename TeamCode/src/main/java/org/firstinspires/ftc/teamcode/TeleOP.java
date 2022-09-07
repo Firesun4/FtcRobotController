@@ -6,13 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+//import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
 public class TeleOP extends OpMode {
-    private DcMotorEx leftFront, leftBack, rightFront, rightBack, intake, outtake, delivery1, delivery2;
-    private Servo duckLeft, duckcRight, pully;
+    private DcMotorEx leftFront, leftBack, rightFront, rightBack;
+    //private DcMotorEx leftFront, leftBack, rightFront, rightBack, intake, outtake, delivery1, delivery2;
+    //private Servo duckLeft, duckcRight, pully;
     private boolean direction, togglePrecision, reverse;
     private double factor;
     private BNO055IMU imu;
@@ -23,12 +24,12 @@ public class TeleOP extends OpMode {
         leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
-        intake = (DcMotorEx) hardwareMap.dcMotor.get("intake");
+       /* intake = (DcMotorEx) hardwareMap.dcMotor.get("intake");
         delivery1 = (DcMotorEx) hardwareMap.dcMotor.get("delivery1");
         delivery2 = (DcMotorEx) hardwareMap.dcMotor.get("delivery2");
         outtake = (DcMotorEx) hardwareMap.dcMotor.get("outtake");
         duckLeft = (Servo) hardwareMap.get("duckLEFT");
-        duckRight = (Servo) hardwareMap.get("duckRIGHT");
+       // duckRight = (Servo) hardwareMap.get("duckRIGHT");
         pully = (Servo) hardwareMap.get("pully");
         //Initialize all the hardware to use Encoders
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -41,6 +42,8 @@ public class TeleOP extends OpMode {
         outtake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
+        */
+
         //Setting the motors' power to 69 hahaha funny sex number, haha sex funny imo, guy s this is too funny imo, its crazy funny. It makes me go haha, funny sex, its like 420, but instead of weed its the funny sex instead of funny weed, but 420 is also pretty funny as the funny drug number that you smoke weed to. Although 420 is funny, 69 is the funner number as 69 is like balls, and balls are funny imo, because i like balls. Balls are a funny thing to laugh at because balls are like testicles, and lemme tell you how funny testicles are. sorry i got off topic, 69 is funny number BECAUSE SEX, and that is just funny, it really is super funny, and is the entire definition of comedy. - Julian
 
         //Initialize the motors to begin stationary
@@ -48,20 +51,23 @@ public class TeleOP extends OpMode {
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         delivery1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         delivery2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         outtake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
+         */
         //Left Motors are in reverse and Right Motors are forward so the robot can move forward
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        delivery1.setDirection(DcMotorSimple.Direction.FORWARD);
-        delivery2.setDirection(DcMotorSimple.Direction.FORWARD);
-        outtake.setDirection(DcMotorSimple.Direction.FORWARD);
+       // intake.setDirection(DcMotor.Direction.FORWARD);
+       // delivery1.setDirection(DcMotorSimple.Direction.FORWARD);
+        //delivery2.setDirection(DcMotorSimple.Direction.FORWARD);
+       // outtake.setDirection(DcMotorSimple.Direction.FORWARD);
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -78,6 +84,7 @@ public class TeleOP extends OpMode {
             togglePrecision = !togglePrecision;
         if(gamepad1.back)
             reverse = !reverse;
+        /*
         if(gamepad1.b) {
             intake.setPower(-1);
             delivery1.setPower(1);
@@ -105,15 +112,17 @@ public class TeleOP extends OpMode {
             pully.setPosition(1);
         if(gamepad1.x && !reverse)
             duckLeft.setPosition(.7);
-            duckRight.setPosition(.7)
+        duckRight.setPosition(.7);
         else if(gamepad1.x)
             duckLeft.setPosition(-.7);
-            duckRight.setPosition(-.7)
+        duckRight.setPosition(-.7)
         else
-            duckLeft.setPosition(.5);
-            duckRight.setPosition(.5)
+        duckLeft.setPosition(.5);
+        duckRight.setPosition(.5)
 
-        
+
+
+         */
 
 
         telemetry.addData("Precision",togglePrecision);

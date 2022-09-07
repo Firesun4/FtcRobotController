@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
-public class EncodeAuto extends LinearOpMode{
+public class EncoderAuto extends LinearOpMode{
     private DcMotorEx leftFront;
     private DcMotorEx leftBack;
     private DcMotorEx rightFront;
@@ -44,13 +44,13 @@ public class EncodeAuto extends LinearOpMode{
         waitForStart();
     }
 
-    @Override
+    //@Override
     private void drive(double speed, int leftFrontTarget, int leftBackTarget, int rightFrontTarget, int rightBackTarget){
         leftFrontPos += leftFrontTarget;
         leftBackPos += leftBackTarget;
         rightFrontPos += rightFrontTarget;
         rightBackPos += rightBackTarget;
 
-        leftFront.setVelocity(10, AngleUnit.RADIANS);
+        //leftFront.setVelocity(10, AngleUnit.RADIANS);
     }
 }

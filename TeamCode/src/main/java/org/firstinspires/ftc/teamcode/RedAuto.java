@@ -10,8 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 public class RedAuto extends LinearOpMode{
-    private DcMotorEx leftFront, leftBack, rightFront, rightBack, intake, outtake, delivery1, delivery2;
-    private Servo duck, pully;
+    private DcMotorEx leftFront, leftBack, rightFront, rightBack;
+    //private DcMotorEx leftFront, leftBack, rightFront, rightBack, intake, outtake, delivery1, delivery2;
+    //private Servo duck, pully;
     private DcMotorEx[] motors;
     private final double TPI = 33.5625;
     private ElapsedTime timer;
@@ -19,7 +20,7 @@ public class RedAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        initalize();
+        initialize();
         /*
         drive(.8,100);
         turn(.8,300);
@@ -47,6 +48,7 @@ public class RedAuto extends LinearOpMode{
         leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
+        /*
         intake = (DcMotorEx) hardwareMap.dcMotor.get("intake");
         delivery1 = (DcMotorEx) hardwareMap.dcMotor.get("delivery1");
         delivery2 = (DcMotorEx) hardwareMap.dcMotor.get("delivery2");
@@ -54,6 +56,8 @@ public class RedAuto extends LinearOpMode{
         duckRight = (Servo) hardwareMap.get("duck");
         duckLeft = (Servo) hardwareMap.get("duck");
         pully = (Servo) hardwareMap.get("pully");
+
+         */
 
         motors = new DcMotorEx[]{leftFront, leftBack, rightFront, rightBack};
 

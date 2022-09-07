@@ -18,7 +18,7 @@ public class BlueAuto extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
-        initalize();
+        initialize();
         /*
         drive(.8,100);
         turn(.8,300);
@@ -96,7 +96,7 @@ public class BlueAuto extends LinearOpMode{
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         for (DcMotorEx motor : motors) {
-            motor.setPower(1*direction);
+            motor.setPower(direction);
         }
         while (timer.milliseconds() <= time) {
             if (!opModeIsActive()) {
