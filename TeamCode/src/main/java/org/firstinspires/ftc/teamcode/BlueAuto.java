@@ -136,12 +136,10 @@ public class BlueAuto extends LinearOpMode{
         intake.setPower(-1);
         delivery1.setPower(1);
         delivery2.setPower(-1);
-
         while(timer.milliseconds() <= 5000)
             if (!opModeIsActive()) {
                 throw new InterruptedException();
             }
-
         intake.setPower(0);
         delivery1.setPower(0);
         delivery2.setPower(0);
@@ -172,7 +170,6 @@ public class BlueAuto extends LinearOpMode{
             }
         }
     }
-
     public void dropPully() throws InterruptedException {
         timer = new ElapsedTime();
         pully.setPosition(1);
@@ -189,6 +186,5 @@ public class BlueAuto extends LinearOpMode{
         }
         outtake.setPower(0);
     }
-
      */
 }
