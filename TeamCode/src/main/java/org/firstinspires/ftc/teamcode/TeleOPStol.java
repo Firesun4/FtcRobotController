@@ -29,10 +29,12 @@ public class TeleOPStol extends OpMode {
 
     @Override
     public void init() {
-        leftFront = (DcMotorEx) hardwareMap.dcMotor.get("LF");
-        leftBack = (DcMotorEx) hardwareMap.dcMotor.get("LR");
-        rightFront = (DcMotorEx) hardwareMap.dcMotor.get("RF");
-        rightBack = (DcMotorEx) hardwareMap.dcMotor.get("RB");
+        telemetry.addData("init start", android.R.bool::new);
+        telemetry.update();
+        leftFront = (DcMotorEx) hardwareMap.dcMotor.get("FL");
+        leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
+        rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
+        rightBack = (DcMotorEx) hardwareMap.dcMotor.get("FL");
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -45,13 +47,14 @@ public class TeleOPStol extends OpMode {
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
 
-
-
-
+        telemetry.addData("init end", android.R.bool::new);
+        telemetry.update();
 
     }
     @Override
     public void loop(){
+        telemetry.addData("loop start", android.R.bool::new);
+        telemetry.update();
         toggleA.updateStart(gamepad1.a);
         //toggles precision mode if the right stick button is pressed
         if (gamepad1.left_stick_button)
@@ -81,8 +84,8 @@ public class TeleOPStol extends OpMode {
         rightFront.setPower(rightFrontPower * factor);
         rightBack.setPower(rightRearPower * factor);
 
-
-
+        telemetry.addData("loop end", android.R.bool::new);
+        telemetry.update();
         toggleA.updateEnd();
     }
 
