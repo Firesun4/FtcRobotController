@@ -10,47 +10,49 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "EncoderAuto")
 public class EncoderAuto extends LinearOpMode{
-    private DcMotorEx leftFront;
-    private DcMotorEx leftBack;
-    private DcMotorEx rightFront;
-    private DcMotorEx rightBack;
+    private DcMotorEx left;
+    private DcMotorEx right;
 
-    private double leftFrontPos;
-    private double leftBackPos;
-    private double rightFrontPos;
-    private double rightBackPos;
-
+    private int leftPos;
+    private int rightPos;
+    @Override
     public void runOpMode(){
-        leftFront = (DcMotorEx) hardwareMap.dcMotor.get("leftFront");
-        leftBack = (DcMotorEx) hardwareMap.dcMotor.get("leftBack");
-        rightFront = (DcMotorEx) hardwareMap.dcMotor.get("rightFront");
-        rightBack = (DcMotorEx) hardwareMap.dcMotor.get("rightBack");
+        left = (DcMotorEx) hardwareMap.dcMotor.get("leftMotor");
+        right = (DcMotorEx) hardwareMap.dcMotor.get("rightMotor");
 
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftBack.setDirection(DcMotorEx.Direction.REVERSE);
+        left.setDirection(DcMotorEx.Direction.REVERSE);
+        right.setDirection(DcMotorEx.Direction.REVERSE);
 
-
-
-        leftFrontPos = 0.03;
-        leftBackPos = 0;
-        rightFrontPos = 0;
-        rightBackPos = 0.03  ;
+        leftPos = 0;
+        rightPos = 0;
 
         waitForStart();
+        drive(0.25, 1000, 1000);
+        drive(0.25, 1000,-1000);
     }
 
     //@Override
-    private void drive(double speed, int leftFrontTarget, int leftBackTarget, int rightFrontTarget, int rightBackTarget){
-        leftFrontPos += leftFrontTarget;
-        leftBackPos += leftBackTarget;
-        rightFrontPos += rightFrontTarget;
-        rightBackPos += rightBackTarget;
+    private void drive(double speed, int leftTarget, int rightTarget){
+        leftPos += leftTarget;
+        rightPos += rightTarget;
+
+        left.setTargetPosition(leftPos);
+        right.setTargetPosition(rightPos);
+
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        left.setPower(speed);
+        right.setPower(speed);
+
+        while(opModeIsActive() && left.isBusy() && right.isBusy()){
+            idle();
+        }
 
         //leftFront.setVelocity(10, AngleUnit.RADIANS);
     }
+
 }

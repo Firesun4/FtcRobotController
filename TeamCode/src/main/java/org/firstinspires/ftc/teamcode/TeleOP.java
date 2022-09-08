@@ -148,7 +148,7 @@ public class TeleOP extends OpMode {
 
 
         //Set the position of arm to counter clockwise/clockwise
-        //balls imo - Julian
+
 
 
 
