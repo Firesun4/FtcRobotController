@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp
+@TeleOp(name = "TeleOPNew")
 public class TeleOP extends OpMode {
     private DcMotorEx leftFront, leftBack, rightFront, rightBack;
     //private DcMotorEx leftFront, leftBack, rightFront, rightBack, intake, outtake, delivery1, delivery2;
@@ -31,11 +31,7 @@ public class TeleOP extends OpMode {
         duckLeft = (Servo) hardwareMap.get("duckLEFT");
        // duckRight = (Servo) hardwareMap.get("duckRIGHT");
         pully = (Servo) hardwareMap.get("pully");
-        //Initialize all the hardware to use Encoders
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         delivery1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         delivery2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -43,7 +39,11 @@ public class TeleOP extends OpMode {
 
 
         */
-
+        //Initialize all the hardware to use Encoders
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Setting the motors' power to 69 hahaha funny sex number, haha sex funny imo, guy s this is too funny imo, its crazy funny. It makes me go haha, funny sex, its like 420, but instead of weed its the funny sex instead of funny weed, but 420 is also pretty funny as the funny drug number that you smoke weed to. Although 420 is funny, 69 is the funner number as 69 is like balls, and balls are funny imo, because i like balls. Balls are a funny thing to laugh at because balls are like testicles, and lemme tell you how funny testicles are. sorry i got off topic, 69 is funny number BECAUSE SEX, and that is just funny, it really is super funny, and is the entire definition of comedy. - Julian
 
         //Initialize the motors to begin stationary
@@ -75,6 +75,7 @@ public class TeleOP extends OpMode {
 
         togglePrecision = false;
         reverse = false;
+        loop();
     }
 
 
@@ -163,10 +164,12 @@ public class TeleOP extends OpMode {
         leftBack.setPower(leftRearPower * factor);
         rightFront.setPower(rightFrontPower * factor);
         rightBack.setPower(rightRearPower * factor);
-
+        if(!gamepad1.start) {
+            loop();
+        }
         //Incrementing the power by 0.0 EVERY TIME you call this function
         //Incrementing the power by 0.0 EVERY TIME you call this function
-// for jon in jon on jon
+// for jon in jon on jon2
 
 
         //Reset the intake and transfer encoders
