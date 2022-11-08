@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "editedBlue")
 public class BlueAuto extends LinearOpMode{
     private DcMotorEx leftFront, leftBack, rightFront, rightBack, intake, outtake, delivery1, delivery2;
-    private Servo duck, pully;
+    private Servo duck;
     private DcMotorEx[] motors;
     private final double TPI = 33.5625;
     private ElapsedTime timer;
@@ -58,8 +58,8 @@ public class BlueAuto extends LinearOpMode{
         delivery1 = (DcMotorEx) hardwareMap.dcMotor.get("delivery1");
         delivery2 = (DcMotorEx) hardwareMap.dcMotor.get("delivery2");
         outtake = (DcMotorEx) hardwareMap.dcMotor.get("outtake");
-        duck = (Servo) hardwareMap.get("duck");
-        pully = (Servo) hardwareMap.get("pully");
+        //duck = (Servo) hardwareMap.get("duck");
+        //pully = (Servo) hardwareMap.get("pully");
 
         motors = new DcMotorEx[]{leftFront, leftBack, rightFront, rightBack};
 
