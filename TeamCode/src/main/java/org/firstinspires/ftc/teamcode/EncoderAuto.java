@@ -17,9 +17,9 @@ public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
     private int rightPos;
     @Override
     public void runOpMode(){
-        super.runOpMode();
-        left = (DcMotorEx) hardwareMap.dcMotor.get("leftMotor");
-        right = (DcMotorEx) hardwareMap.dcMotor.get("rightMotor");
+        //super.runOpMode();
+        left = (DcMotorEx) hardwareMap.dcMotor.get("FL");
+        right = (DcMotorEx) hardwareMap.dcMotor.get("FR");
 
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -31,8 +31,8 @@ public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
         rightPos = 0;
 
         waitForStart();
-        drive(0.25, 1000, 1000);
-        drive(0.25, 1000,-1000);
+        drive(0.5, 10000, 10000);
+        drive(0.5, 10000,-10000);
     }
 
     //@Override
