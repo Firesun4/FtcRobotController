@@ -55,13 +55,17 @@ public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
         front_right.setTargetPosition(rightPos);
         back_right.setTargetPosition(rightPos);
 
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        left.setPower(speed);
-        right.setPower(speed);
+        front_left.setPower(speed);
+        front_right.setPower(speed);
+        back_left.setPower(speed);
+        back_right.setPower(speed);
 
-        while(opModeIsActive() && left.isBusy() && right.isBusy()){
+        while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
             idle();
         }
 
