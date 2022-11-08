@@ -70,7 +70,7 @@ public class TeleOPTest extends OpMode {
             togglePrecision = false;
 
         //sets the factor multiplied to the power of the motors
-        factor = togglePrecision ? .3 : 1; //the power is 1/5th of its normal value while in precision mode
+        factor = togglePrecision ? .3 : 1.5; //the power is 1/5th of its normal value while in precision mode
 
         // Do not mess with this, if it works, it works
         double x = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
