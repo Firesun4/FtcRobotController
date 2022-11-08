@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
     private DcMotorEx front_left;
     private DcMotorEx front_right;
-    private DcMotorEx back_left
+    private DcMotorEx back_left;
     private DcMotorEx back_right;
 
     private int leftPos;
@@ -25,14 +25,19 @@ public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
         back_left = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         back_right = (DcMotorEx) hardwareMap.dcMotor.get("BR");
 
-        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        left.setDirection(DcMotorEx.Direction.REVERSE);
-        right.setDirection(DcMotorEx.Direction.REVERSE);
+        front_left.setDirection(DcMotorEx.Direction.REVERSE);
+        front_right.setDirection(DcMotorEx.Direction.REVERSE);
+        back_left.setDirection(DcMotorEx.Direction.REVERSE);
+        back_right.setDirection(DcMotorEx.Direction.REVERSE);
 
         leftPos = 0;
         rightPos = 0;
+
 
         waitForStart();
         drive(0.25, 1000, 1000);
@@ -44,7 +49,8 @@ public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
         leftPos += leftTarget;
         rightPos += rightTarget;
 
-        left.setTargetPosition(leftPos);
+        front_left.setTargetPosition(leftPos);
+        back_left.setTargetPosition(leftPos);
         right.setTargetPosition(rightPos);
 
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
