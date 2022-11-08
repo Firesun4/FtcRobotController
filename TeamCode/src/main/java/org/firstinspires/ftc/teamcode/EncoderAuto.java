@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "EncoderAuto")
-public class EncoderAuto extends LinearOpMode{
+public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
     private DcMotorEx left;
     private DcMotorEx right;
 
@@ -17,6 +17,7 @@ public class EncoderAuto extends LinearOpMode{
     private int rightPos;
     @Override
     public void runOpMode(){
+        super.runOpMode();
         left = (DcMotorEx) hardwareMap.dcMotor.get("leftMotor");
         right = (DcMotorEx) hardwareMap.dcMotor.get("rightMotor");
 
