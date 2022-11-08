@@ -40,7 +40,7 @@ public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
 
 
         waitForStart();
-        drive(0.25, 1000, 1000);
+        //drive(0.25, 1000, 1000);
         drive(0.25, 1000,-1000);
     }
 
