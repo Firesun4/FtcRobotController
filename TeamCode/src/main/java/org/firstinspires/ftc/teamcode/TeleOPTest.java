@@ -46,7 +46,7 @@ public class TeleOPTest extends OpMode {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //rightFront.setDirection(DcMotor.Direction.REVERSE);
-       // rightBack.setDirection(DcMotor.Direction.REVERSE);
+        // rightBack.setDirection(DcMotor.Direction.REVERSE);
 
         //new stuff
         leftFront.setDirection(DcMotor.Direction.REVERSE);
