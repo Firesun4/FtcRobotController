@@ -64,7 +64,7 @@ public class TeleOPTest extends OpMode {
 
     }
     @Override
-    public void loop(){
+    public void loop() {
         telemetry.addData("loop start", android.R.bool::new);
         telemetry.update();
         toggleA.updateStart(gamepad1.a);
@@ -73,6 +73,26 @@ public class TeleOPTest extends OpMode {
             togglePrecision = true;
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
+        if (gamepad2.dpad_up) {
+            slideA.setPower(1);
+            slideB.setPower(1);
+        }
+        else if (gamepad2.dpad_down) {
+            slideA.setPower(-1);
+            slideB.setPower(-1);
+        }
+
+        else{
+            slideA.setPower(0);
+            slideB.setPower(0);
+        }
+        if(gamepad2.right_trigger > .49){
+            claw.setPosition(0.5);
+        }
+        else if(gamepad2.left_trigger > .49)
+            claw.setPosition(-0.5);
+        else
+            claw.setPosition(0);
 
 
         //sets the factor multiplied to the power of the motors
@@ -87,6 +107,7 @@ public class TeleOPTest extends OpMode {
         final double leftRearPower = Range.clip(x * Math.sin(powerAngle) - rightX, -1.0, 1.0);
         final double rightFrontPower = Range.clip(x * Math.sin(powerAngle) + rightX, -1.0, 1.0);
         final double rightRearPower = Range.clip(x * Math.cos(powerAngle) + rightX, -1.0, 1.0);
+
 
         //CHANGED LEFT FRONT TO REVERSE
         leftFront.setDirection(DcMotor.Direction.FORWARD);
