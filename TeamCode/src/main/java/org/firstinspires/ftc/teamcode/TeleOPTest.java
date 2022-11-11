@@ -17,10 +17,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-@TeleOp(name="TeleOPStol")
+@TeleOp(name="TeleOPOfficial")
 public class TeleOPTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotorEx leftFront, leftBack, rightFront, rightBack;
+    private DcMotorEx leftFront, leftBack, rightFront, rightBack, slideA, slideB;
+    private Servo claw, pitchA, pitchB;
     private boolean direction, togglePrecision;
     private double factor;
     boolean reverse;
@@ -35,6 +36,9 @@ public class TeleOPTest extends OpMode {
         leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
+        slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
+        slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
+        claw = (Servo) hardwareMap.get("CW");
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -49,6 +53,7 @@ public class TeleOPTest extends OpMode {
         // rightBack.setDirection(DcMotor.Direction.REVERSE);
 
         //new stuff
+
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
@@ -68,6 +73,7 @@ public class TeleOPTest extends OpMode {
             togglePrecision = true;
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
+
 
         //sets the factor multiplied to the power of the motors
         factor = togglePrecision ? .3 : 1.5; //the power is 1/5th of its normal value while in precision mode

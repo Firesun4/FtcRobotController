@@ -17,6 +17,7 @@ public class EncoderAuto extends AprilTagAutonomousInitDetectionExample{
 
     private int leftPos;
     private int rightPos;
+
     @Override
     public void runOpMode(){
         super.runOpMode();
