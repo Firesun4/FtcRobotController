@@ -21,8 +21,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -33,9 +36,15 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
-@TeleOp
+@Autonomous(name = "NewCVAuto")
 public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 {
+    private DcMotorEx front_left;
+    private DcMotorEx front_right;
+    private DcMotorEx back_left;
+    private DcMotorEx back_right;
+    private int leftPos;
+    private int rightPos;
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -166,18 +175,44 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             telemetry.update();
         }
 
+        front_left = (DcMotorEx) hardwareMap.dcMotor.get("FL");
+        front_right = (DcMotorEx) hardwareMap.dcMotor.get("FR");
+        back_left = (DcMotorEx) hardwareMap.dcMotor.get("BL");
+        back_right = (DcMotorEx) hardwareMap.dcMotor.get("BR");
+
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        front_left.setDirection(DcMotorEx.Direction.REVERSE);
+        front_right.setDirection(DcMotorEx.Direction.REVERSE);
+        back_left.setDirection(DcMotorEx.Direction.REVERSE);
+        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+
+        leftPos = 0;
+        rightPos = 0;
+
         /* Actually do something useful */
+        int turnVal = 800;
+        int forward = 1000;
+
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
-            //trajectory
+            drive(0.5,forward,forward);
+            drive(0.5, -turnVal,turnVal);
         }else if(tagOfInterest.id == MIDDLE){
-            //trajectory
+            drive(0.5,1000,1000);
         }else{
-            //trajectory
+            drive(0.5,forward,forward);
+            drive(0.5, turnVal,-turnVal);
         }
 
 
+
+
+        waitForStart();
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
-        while (opModeIsActive()) {sleep(20);}
+        //while (opModeIsActive()) {sleep(20);}
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -189,6 +224,33 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+    }
+
+    private void drive(double speed, int leftTarget, int rightTarget){
+        leftPos += leftTarget;
+        rightPos += rightTarget;
+
+        front_left.setTargetPosition(leftPos);
+        back_left.setTargetPosition(leftPos);
+
+        front_right.setTargetPosition(rightPos);
+        back_right.setTargetPosition(rightPos);
+
+        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        front_left.setPower(speed);
+        front_right.setPower(speed);
+        back_left.setPower(speed);
+        back_right.setPower(speed);
+
+        while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
+            idle();
+        }
+
+        //leftFront.setVelocity(10, AngleUnit.RADIANS);
     }
 
 }
