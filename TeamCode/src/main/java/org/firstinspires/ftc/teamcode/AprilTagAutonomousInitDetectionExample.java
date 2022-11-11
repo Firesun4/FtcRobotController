@@ -198,13 +198,26 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         int forward = 1000;
 
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
-            drive(0.5,forward,forward);
             drive(0.5, -turnVal,turnVal);
-        }else if(tagOfInterest.id == MIDDLE){
-            drive(0.5,1000,1000);
-        }else{
             drive(0.5,forward,forward);
             drive(0.5, turnVal,-turnVal);
+            drive(0.5,forward,forward);
+
+
+        }else if(tagOfInterest.id == MIDDLE){
+            drive(0.5, -turnVal,turnVal);
+            drive(0.5,forward,forward);
+            drive(0.5, turnVal,-turnVal);
+            drive(0.5,forward,2*forward);
+            drive(0.5, turnVal,-turnVal);
+            drive(0.5,forward,forward);
+
+
+        }else{
+            drive(0.5, turnVal,-turnVal);
+            drive(0.5,forward,forward);
+            drive(0.5, -turnVal,turnVal);
+            drive(0.5,forward,forward);
         }
 
 
