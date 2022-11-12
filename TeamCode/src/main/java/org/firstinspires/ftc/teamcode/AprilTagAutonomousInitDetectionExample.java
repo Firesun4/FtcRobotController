@@ -194,11 +194,11 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         rightPos = 0;
 
         /* Actually do something useful */
-        int turnVal = 200;
+        int turnVal = 800;
         int forward = 1000;
 
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
-            drive(0.5, 0,turnVal);
+            drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
             drive(0.5, turnVal,-turnVal);
             drive(0.5,forward,forward);
