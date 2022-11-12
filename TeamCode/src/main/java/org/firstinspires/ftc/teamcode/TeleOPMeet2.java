@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -18,30 +19,27 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp(name="TeleOPOfficial")
-public class TeleOPTest extends OpMode {
+public class TeleOPMeet2 extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotorEx leftFront, leftBack, rightFront, rightBack, slideA, slideB, clawAngle;
+    private DcMotorEx leftFront, leftBack, rightFront, rightBack, slideA, slideB;
     private Servo claw, pitchA, pitchB;
     private boolean direction, togglePrecision;
     private double factor;
+    private Arm Arm1;
     boolean reverse;
     final int balls = 3;
     EasyToggle toggleA = new EasyToggle("a", false, 1, false, false);
 
     @Override
     public void init() {
+        Arm1 = new Arm(hardwareMap);
         telemetry.addData("init start", android.R.bool::new);
         telemetry.update();
         leftFront = (DcMotorEx) hardwareMap.dcMotor.get("FL");
         leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
-        slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
-        slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
-        clawAngle = (DcMotorEx) hardwareMap.dcMotor.get("CA");
         claw = (Servo) hardwareMap.get("CW");
-        pitchA = (Servo) hardwareMap.get("PA");
-        pitchB = (Servo) hardwareMap.get("PB");
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -51,10 +49,6 @@ public class TeleOPTest extends OpMode {
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideA.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        clawAngle.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         //rightFront.setDirection(DcMotor.Direction.REVERSE);
         // rightBack.setDirection(DcMotor.Direction.REVERSE);
@@ -65,11 +59,6 @@ public class TeleOPTest extends OpMode {
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
-        slideA.setDirection(DcMotor.Direction.FORWARD);
-        slideB.setDirection(DcMotor.Direction.FORWARD);
-        clawAngle.setDirection(DcMotor.Direction.FORWARD);
-
-
 
         telemetry.addData("init end", android.R.bool::new);
         telemetry.update();
@@ -85,7 +74,7 @@ public class TeleOPTest extends OpMode {
             togglePrecision = true;
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
-        if (gamepad2.dpad_up) {
+        if (gamepad2.x) {
             slideA.setPower(1);
             slideB.setPower(1);
         }
@@ -98,6 +87,14 @@ public class TeleOPTest extends OpMode {
             slideA.setPower(0);
             slideB.setPower(0);
         }
+        if(gamepad2.a){
+            Arm1.setExtake();
+
+        }
+        else if(gamepad2.b){
+            Arm1.setIntake();
+        }
+        Arm1.update(telemetry);
         if(gamepad2.right_trigger > .49){
             claw.setPosition(0.5);
         }
@@ -105,17 +102,6 @@ public class TeleOPTest extends OpMode {
             claw.setPosition(-0.5);
         else
             claw.setPosition(0);
-
-        if(gamepad2.x){
-            clawAngle.setPower(0.75);
-
-        }
-        else if(gamepad2.y){
-            clawAngle.setPower(-0.75);
-        }
-        else{
-            clawAngle.setPower(0);
-        }
 
 
         //sets the factor multiplied to the power of the motors
@@ -155,3 +141,4 @@ public class TeleOPTest extends OpMode {
 
 
 }
+
