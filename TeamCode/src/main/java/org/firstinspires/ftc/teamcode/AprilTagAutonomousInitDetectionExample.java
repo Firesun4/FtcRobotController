@@ -218,7 +218,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         }else{
             drive(0.5, turnVal,-turnVal);
             drive(0.5,forward,forward);
-            drive(0.5, -turnVal,turnVal);
+            drive(0.5, -700,700);
             drive(0.5,forward,forward);
         }
 
