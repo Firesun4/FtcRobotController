@@ -21,17 +21,28 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class TeleOPTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx leftFront, leftBack, rightFront, rightBack, slideA, slideB, clawAngle;
-    private Servo claw, pitchA, pitchB;
+    private Servo claw = null;
+    private Servo pitchA = null;
+    private Servo pitchB = null;
     private boolean direction, togglePrecision;
     private double factor;
+    private double speed;
+    private double servoPos;
+    private boolean oldServoButton;
     boolean reverse;
+    BNO055IMU imu;
     final int balls = 3;
+    private int HIGH,MID,LOW;
     EasyToggle toggleA = new EasyToggle("a", false, 1, false, false);
+    //  EasyToggle toggleB = new EasyToggle("b", false, 1, false, false);
 
     @Override
     public void init() {
         telemetry.addData("init start", android.R.bool::new);
         telemetry.update();
+        HIGH = 1000;
+        MID = 500;
+        LOW = 100;
         leftFront = (DcMotorEx) hardwareMap.dcMotor.get("FL");
         leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
@@ -39,9 +50,28 @@ public class TeleOPTest extends OpMode {
         slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
         slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
         clawAngle = (DcMotorEx) hardwareMap.dcMotor.get("CA");
-        claw = (Servo) hardwareMap.get("CW");
+        //claw = (Servo) hardwareMap.get("CW");
+        claw = hardwareMap.servo.get("CW");
         pitchA = (Servo) hardwareMap.get("PA");
         pitchB = (Servo) hardwareMap.get("PB");
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        imu.initialize(parameters);
+        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        claw.setPosition(0.5);
+
+        speed = 0.1;
+
+        servoPos = 0;
+        oldServoButton = false;
+
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -75,43 +105,84 @@ public class TeleOPTest extends OpMode {
         telemetry.update();
 
     }
+    private void slide(double speed, int Target){
+
+        slideA.setTargetPosition(Target);
+        slideB.setTargetPosition(Target);
+
+        slideA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        slideA.setPower(speed);
+        slideB.setPower(speed);
+    }
     @Override
     public void loop() {
-        telemetry.addData("loop start", android.R.bool::new);
-        telemetry.update();
+        //telemetry.addData("loop start", android.R.bool::new);
+        // telemetry.update();
         toggleA.updateStart(gamepad1.a);
+        // toggleB.updateStart(gamepad2.b);
+
         //toggles precision mode if the right stick button is pressed
         if (gamepad1.left_stick_button)
             togglePrecision = true;
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
-        if (gamepad2.dpad_up) {
-            slideA.setPower(1);
-            slideB.setPower(1);
+
+        if(gamepad1.right_bumper){
+            claw.setDirection(Servo.Direction.REVERSE);
+            servoPos = 1;
         }
-        else if (gamepad2.dpad_down) {
-            slideA.setPower(-1);
-            slideB.setPower(-1);
+        else if(gamepad1.left_bumper){
+            claw.setDirection(Servo.Direction.FORWARD);
+            servoPos = 0;
         }
 
+        if (gamepad1.dpad_up) {
+            slideA.setPower(1);
+            slideB.setPower(1);
+            // slide(0.25,HIGH); //highest SET SOLUTION
+        }
+        /* SET SOLUTION
+        else if(gamepad2.dpad_left){
+           slide(s0.25,MID);
+        }
+
+         */
+
+
+        else if (gamepad1.dpad_down) {
+            slideA.setPower(-1);
+            slideB.setPower(-1);
+            //   slide(0.25,LOW); #SET SOLUTION
+
+        }
+        /* SET SOLUTION
+        else if(gamepad.dpad_right){
+            slide(0.25,0);
+        }
+         */
         else{
             slideA.setPower(0);
             slideB.setPower(0);
         }
-        if(gamepad2.right_trigger > .49){
-            claw.setPosition(0.5);
-        }
-        else if(gamepad2.left_trigger > .49)
-            claw.setPosition(-0.5);
-        else
+
+        /*
+        else{
             claw.setPosition(0);
+        }
 
-        if(gamepad2.x){
-            clawAngle.setPower(0.75);
+         */
+
+
+        if(gamepad1.x){
+            clawAngle.setPower(0.5);
+            //clawAngle.setTargetPosition(50);
 
         }
-        else if(gamepad2.y){
-            clawAngle.setPower(-0.75);
+        else if(gamepad1.y){
+            clawAngle.setPower(-0.5);
+            //clawAngle.setTargetPosition(-50);
         }
         else{
             clawAngle.setPower(0);
@@ -145,7 +216,9 @@ public class TeleOPTest extends OpMode {
         telemetry.addData("loop end", android.R.bool::new);
         telemetry.update();
         toggleA.updateEnd();
+        // toggleB.updateEnd();
     }
+
 
 
 // heading to brazil

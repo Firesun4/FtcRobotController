@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -186,31 +187,32 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
-        front_right.setDirection(DcMotorEx.Direction.REVERSE);
+        front_right.setDirection(DcMotorEx.Direction.FORWARD);
         back_left.setDirection(DcMotorEx.Direction.REVERSE);
-        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+        back_right.setDirection(DcMotorEx.Direction.FORWARD);
 
         leftPos = 0;
         rightPos = 0;
 
         /* Actually do something useful */
-        int turnVal = 800;
+        int turnVal = 750;
         int forward = 1000;
 
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
-            drive(0.5, turnVal,-turnVal);
+            drive(0.5, 700,-700);
             drive(0.5,forward,forward);
 
 
         }else if(tagOfInterest.id == MIDDLE){
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
-            drive(0.5, turnVal,-turnVal);
-            drive(0.5,forward,2*forward);
-            drive(0.5, turnVal,-turnVal);
-            drive(0.5,forward,forward);
+            drive(0.5, 700,-700);
+            drive(0.5,1850,1850);
+            sleep(500);
+            drive(0.5, 700,-700);
+            drive(0.5,150,150);
 
 
         }else{
