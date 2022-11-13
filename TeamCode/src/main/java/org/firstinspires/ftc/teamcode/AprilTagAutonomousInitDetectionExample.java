@@ -44,6 +44,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     private DcMotorEx front_right;
     private DcMotorEx back_left;
     private DcMotorEx back_right;
+    private DcMotorEx clawAngle;
     private int leftPos;
     private int rightPos;
     OpenCvCamera camera;
@@ -98,6 +99,13 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         /*
          * The INIT-loop:
          * This REPLACES waitForStart!
+         */
+        /*
+        clawAngle = (DcMotorEx) hardwareMap.dcMotor.get("CA");
+        clawAngle.setTargetPosition(1);
+        clawAngle.setPower(-0.25);
+        clawAngle.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
          */
         while (!isStarted() && !isStopRequested())
         {
@@ -181,6 +189,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         back_left = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         back_right = (DcMotorEx) hardwareMap.dcMotor.get("BR");
 
+
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -198,27 +207,33 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         int turnVal = 750;
         int forward = 1000;
 
+
+
+
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
+            drive(0.5, 40,40);
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
-            drive(0.5, 700,-700);
+            drive(0.5, 675,-675);
             drive(0.5,forward,forward);
 
 
         }else if(tagOfInterest.id == MIDDLE){
+            drive(0.5, 85,85);
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
             drive(0.5, 700,-700);
             drive(0.5,1850,1850);
             sleep(500);
-            drive(0.5, 700,-700);
+            drive(0.5, 770,-770);
             drive(0.5,150,150);
 
 
         }else{
+            drive(0.5, 30,30);
             drive(0.5, turnVal,-turnVal);
             drive(0.5,forward,forward);
-            drive(0.5, -700,700);
+            drive(0.5, -675,675);
             drive(0.5,forward,forward);
         }
 

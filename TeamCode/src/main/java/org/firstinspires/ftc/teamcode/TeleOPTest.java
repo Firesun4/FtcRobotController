@@ -50,6 +50,7 @@ public class TeleOPTest extends OpMode {
         telemetry.addData("Claw Port:", (claw.getPortNumber()));
         telemetry.addData("PA Port:", (pitchA.getPortNumber()));
         claw.setPosition(0);
+        //clawServoUn.setPosition(0);
 
         //rightFront.setDirection(DcMotor.Direction.REVERSE);
         // rightBack.setDirection(DcMotor.Direction.REVERSE);
@@ -78,7 +79,7 @@ public class TeleOPTest extends OpMode {
         toggleA.updateStart(gamepad1.a);
         toggleB.updateStart(gamepad2.b);
 
-        clawServoUn.setPosition(0);
+        //clawServoUn.setPosition(0);
 
         //toggles precision mode if the right stick button is pressed
         if (gamepad1.left_stick_button)
@@ -86,15 +87,26 @@ public class TeleOPTest extends OpMode {
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
         if (gamepad2.dpad_up) {
-            slideA.setPower(1);
-            slideB.setPower(1);
+            slideA.setPower(0.7);
+            slideB.setPower(0.7);
         } else if (gamepad2.dpad_down) {
-            slideA.setPower(-1);
-            slideB.setPower(-1);
+            slideA.setPower(-0.5);
+            slideB.setPower(-0.5);
         } else {
             slideA.setPower(0);
             slideB.setPower(0);
         }
+        /*
+        int fr = 0;
+        if(gamepad1.right_bumper){
+            clawServoUn.setPosition(0.01);
+        }
+        else if(gamepad1.left_bumper){
+            clawServoUn.setPosition(0.01);
+        }
+
+         */
+
         if (gamepad2.left_bumper) {
             claw.setPosition(ClawPositions.OPEN);
 //            clawNew.setPosition(0.50);
