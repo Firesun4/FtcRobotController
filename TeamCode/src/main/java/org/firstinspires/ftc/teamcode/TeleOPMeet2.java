@@ -1,39 +1,47 @@
 package org.firstinspires.ftc.teamcode;
-
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@TeleOp(name = "TeleOPOfficial")
-public class TeleOPTest extends OpMode {
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+@TeleOp(name="TeleOpMeet2")
+public class TeleOPMeet2 extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotorEx leftFront, leftBack, rightFront, rightBack, slideA, slideB, clawAngle;
-    private Servo claw, pitchA, pitchB, clawServoUn;
+    private DcMotorEx leftFront, leftBack, rightFront, rightBack, slideA, slideB;
+    private Servo claw, pitchA, pitchB;
     private boolean direction, togglePrecision;
     private double factor;
-    private EasyToggle toggleA = new EasyToggle("a", false, 1, false, false);
+    private Arm Arm1;
     boolean reverse;
-    private EasyToggle toggleB = new EasyToggle("b", false, 2, false, true);
+    final int balls = 3;
+    EasyToggle toggleA = new EasyToggle("a", false, 1, false, false);
 
     @Override
     public void init() {
+        Arm1 = new Arm(hardwareMap);
         telemetry.addData("init start", android.R.bool::new);
         telemetry.update();
         leftFront = (DcMotorEx) hardwareMap.dcMotor.get("FL");
         leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
+        claw = (Servo) hardwareMap.get("CW");
         slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
         slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
-        clawAngle = (DcMotorEx) hardwareMap.dcMotor.get("CA");
-        claw = hardwareMap.servo.get("CW");
-        pitchA = hardwareMap.servo.get("PA");
-        pitchB = hardwareMap.servo.get("PB");
-        clawServoUn = hardwareMap.servo.get("CC");
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -43,14 +51,6 @@ public class TeleOPTest extends OpMode {
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideA.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        clawAngle.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        telemetry.addData("Claw Port:", (claw.getPortNumber()));
-        telemetry.addData("PA Port:", (pitchA.getPortNumber()));
-        claw.setPosition(0);
-        //clawServoUn.setPosition(0);
 
         //rightFront.setDirection(DcMotor.Direction.REVERSE);
         // rightBack.setDirection(DcMotor.Direction.REVERSE);
@@ -61,70 +61,49 @@ public class TeleOPTest extends OpMode {
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
-        slideA.setDirection(DcMotor.Direction.FORWARD);
-        slideB.setDirection(DcMotor.Direction.FORWARD);
-        clawAngle.setDirection(DcMotor.Direction.FORWARD);
-
 
         telemetry.addData("init end", android.R.bool::new);
         telemetry.update();
 
     }
-
     @Override
     public void loop() {
-
-        //telemetry.addData("loop start", android.R.bool::new);
-        //telemetry.update();
+        telemetry.addData("loop start", android.R.bool::new);
+        telemetry.update();
         toggleA.updateStart(gamepad1.a);
-        toggleB.updateStart(gamepad2.b);
-
-        //clawServoUn.setPosition(0);
-
         //toggles precision mode if the right stick button is pressed
         if (gamepad1.left_stick_button)
             togglePrecision = true;
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
-        if (gamepad2.dpad_up) {
-            slideA.setPower(0.7);
-            slideB.setPower(0.7);
-        } else if (gamepad2.dpad_down) {
-            slideA.setPower(-0.5);
-            slideB.setPower(-0.5);
-        } else {
+        if (gamepad2.x) {
+            slideA.setPower(1);
+            slideB.setPower(1);
+        }
+        else if (gamepad2.dpad_down) {
+            slideA.setPower(-1);
+            slideB.setPower(-1);
+        }
+
+        else{
             slideA.setPower(0);
             slideB.setPower(0);
         }
-        /*
-        int fr = 0;
-        if(gamepad1.right_bumper){
-            clawServoUn.setPosition(0.01);
+        if(gamepad2.a){
+            Arm1.setExtake();
+
         }
-        else if(gamepad1.left_bumper){
-            clawServoUn.setPosition(0.01);
+        else if(gamepad2.b){
+            Arm1.setIntake();
         }
-
-         */
-
-        if (gamepad2.left_bumper) {
-            claw.setPosition(ClawPositions.OPEN);
-//            clawNew.setPosition(0.50);
-            telemetry.addData("right trigger call: ", gamepad1.right_bumper);
-            telemetry.update();
-        } else if (gamepad2.right_bumper)
-            claw.setPosition(ClawPositions.CLOSED);
-        telemetry.addData("left trigger call: ", gamepad2.left_trigger);
-        telemetry.update();
-
-        if (gamepad2.x) {
-            clawAngle.setPower(0.75);
-
-        } else if (gamepad2.y) {
-            clawAngle.setPower(-0.75);
-        } else {
-            clawAngle.setPower(0);
+        Arm1.update(telemetry);
+        if(gamepad2.right_trigger > .49){
+            claw.setPosition(0.5);
         }
+        else if(gamepad2.left_trigger > .49)
+            claw.setPosition(-0.5);
+        else
+            claw.setPosition(0);
 
 
         //sets the factor multiplied to the power of the motors
@@ -143,18 +122,17 @@ public class TeleOPTest extends OpMode {
 
         //CHANGED LEFT FRONT TO REVERSE
         leftFront.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.REVERSE); //changged 30
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.FORWARD); // changed 30
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setPower(leftFrontPower * factor);
         leftBack.setPower(leftRearPower * factor);
         rightFront.setPower(rightFrontPower * factor);
         rightBack.setPower(rightRearPower * factor);
 
-        //telemetry.addData("loop end", android.R.bool::new);
-        // telemetry.update();
+        telemetry.addData("loop end", android.R.bool::new);
+        telemetry.update();
         toggleA.updateEnd();
-        toggleB.updateEnd();
     }
 
 
