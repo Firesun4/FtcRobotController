@@ -1,4 +1,6 @@
+
 package org.firstinspires.ftc.teamcode;
+
 
 
 import com.arcrobotics.ftclib.controller.PIDFController;
@@ -15,17 +17,17 @@ public class Arm {
     // Declaring and Initializing PIDF values
 
     //CHANGE THESE
-    public static double armKp = 0.00097; // change first and start at 0
+    public static double armKp = 0.0045; // change first and start at 0
     public static double armKi = 0.000001; // if you always have a equal amount of error make higher
-    public static double armKd = 0; // only used if lots of shaking
+    public static double armKd = 0.0000012; // only used if lots of shaking
     public static double armKf = 0.000023; // if you want to make it go up or down more basically same as Kp? change both
 
     // Correction represents the error term of the PIDF loop
     private double correction;
 
     //CHANGE BASED ticks
-    public static double EXTAKE_POS = 1269; // Actual position based on encoder readings
-    public static double INTAKE_POS = -15; //estimate these both
+    //public static double EXTAKE_POS = 1269; // Actual position based on encoder readings
+    public static double INTAKE_POS = 0; //estimate these both
 
     // Initially set to 0 because we only want the claw to move when given input from the controller
     // initializing the targetPos value to a greater positive value would cause the update() method to
@@ -34,7 +36,7 @@ public class Arm {
     public double targetPos = 0.0;
 
     public Arm(HardwareMap hardwareMap){
-        armMotor = new Motor(hardwareMap, "CA", Motor.GoBILDA.RPM_84); // Pin ___ // change the rpm
+        armMotor = new Motor(hardwareMap, "CA", Motor.GoBILDA.RPM_435); // Pin ___ // change the rpm
         armMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armMotor.setRunMode(Motor.RunMode.VelocityControl);
 
@@ -45,7 +47,7 @@ public class Arm {
     }
 
     public void update(Telemetry telemetry){
-        armPIDF.setPIDF(armKp, armKi, armKd, armKf);
+        //armPIDF.setPIDF(armKp, armKi, armKd, armKf);
         correction = armPIDF.calculate(armMotor.getCurrentPosition(), targetPos);
 
         telemetry.addData("Correction: ", correction);
@@ -57,10 +59,13 @@ public class Arm {
     }
 
     public void setExtake(){
-        targetPos = EXTAKE_POS;
+        targetPos -= 40;
     }
 
     public void setIntake(){
-        targetPos = INTAKE_POS;
+        targetPos += 40;
+    }
+    public void setHigh(){
+        targetPos = -40;
     }
 }

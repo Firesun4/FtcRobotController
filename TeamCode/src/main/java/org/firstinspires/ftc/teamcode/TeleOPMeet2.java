@@ -3,6 +3,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -21,15 +22,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp(name="TeleOpMeet2")
 public class TeleOPMeet2 extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotorEx leftFront, leftBack, rightFront, rightBack, slideA, slideB;
-    private Servo claw, pitchA, pitchB;
+    private DcMotorEx leftFront, leftBack, rightFront, rightBack; //slideA, slideB;
+    private Servo claw, pitchA, pitchB, dumbRotatingClaw;
+   // private CRServo pitchA, pitchB;
     private boolean direction, togglePrecision;
     private double factor;
     private Arm Arm1;
+    private Slide slides;
     boolean reverse;
     final int balls = 3;
-    EasyToggle toggleA = new EasyToggle("a", false, 1, false, false);
-
+    public double val;
+    private EasyToggle toggleA = new EasyToggle("a", false, 1, false, false);
+    private EasyToggle toggleB = new EasyToggle("b", false, 2, false, true);
     @Override
     public void init() {
         Arm1 = new Arm(hardwareMap);
@@ -40,8 +44,19 @@ public class TeleOPMeet2 extends OpMode {
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
         claw = (Servo) hardwareMap.get("CW");
-        slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
-        slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
+
+        dumbRotatingClaw = (Servo) hardwareMap.get("CC");
+        //slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
+        //slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
+      //  pitchA = (CRServo) hardwareMap.crservo.get("PA");
+      //  pitchB = (CRServo) hardwareMap.crservo.get("PB");
+
+       //
+        // val = dumbRotatingClaw.getPosition();
+
+        pitchA = (Servo) hardwareMap.get("PA");
+        pitchB = (Servo) hardwareMap.get("PB");
+        slides = new Slide(hardwareMap);
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -52,6 +67,8 @@ public class TeleOPMeet2 extends OpMode {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+      //  pitchA.setPosition(-0.5);
+      //  pitchB.setPosition(0.5);
         //rightFront.setDirection(DcMotor.Direction.REVERSE);
         // rightBack.setDirection(DcMotor.Direction.REVERSE);
 
@@ -68,42 +85,99 @@ public class TeleOPMeet2 extends OpMode {
     }
     @Override
     public void loop() {
-        telemetry.addData("loop start", android.R.bool::new);
+       // telemetry.addData("loop start", android.R.bool::new);
         telemetry.update();
         toggleA.updateStart(gamepad1.a);
+        toggleB.updateStart(gamepad2.b);
         //toggles precision mode if the right stick button is pressed
         if (gamepad1.left_stick_button)
             togglePrecision = true;
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
-        if (gamepad2.x) {
-            slideA.setPower(1);
-            slideB.setPower(1);
+        if (gamepad2.dpad_up) {
+            telemetry.addData("up bumper",android.R.bool::new);
+          //  telemetry.update();
+            slides.setHIGH();
+            Arm1.setHigh();
+            //slideA.setPower(1);
+            //slideB.setPower(1);
+         //   slides.update(telemetry);
+        }
+        else if(gamepad2.dpad_left){
+            telemetry.addData("left bumper",android.R.bool::new);
+           // telemetry.update();
+            slides.setAboveG();
+        //    slides.update(telemetry);
+
         }
         else if (gamepad2.dpad_down) {
-            slideA.setPower(-1);
-            slideB.setPower(-1);
+            telemetry.addData("low bumper",android.R.bool::new);
+           // telemetry.update();
+            slides.setLOW();
+            //slideA.setPower(-1);
+            //slideB.setPower(-1);
+          //  slides.update(telemetry);
+        }
+        else if(gamepad2.dpad_right){
+            telemetry.addData("right bumper",android.R.bool::new);
+         //   telemetry.update();
+            slides.setGROUND();
+          //  slides.update(telemetry);
         }
 
-        else{
-            slideA.setPower(0);
-            slideB.setPower(0);
+        if(gamepad2.right_bumper){
+            dumbRotatingClaw.setPosition(0.5);
         }
-        if(gamepad2.a){
+
+
+
+        else if(gamepad2.left_bumper){
+            val -=0.01;
+            dumbRotatingClaw.setPosition(val);
+        }
+
+
+
+
+        //else{
+            //slideA.setPower(0);
+            //slideB.setPower(0);
+        //}
+      //  if(gamepad2.right_stick_button)
+        //    }
+        if(gamepad2.y){
             Arm1.setExtake();
 
         }
-        else if(gamepad2.b){
+        else if(gamepad2.x){
             Arm1.setIntake();
         }
         Arm1.update(telemetry);
-        if(gamepad2.right_trigger > .49){
-            claw.setPosition(0.5);
+        if(gamepad2.right_bumper){
+            claw.setPosition(ClawPositions.OPEN);
+            //claw.setPosition(0);
         }
-        else if(gamepad2.left_trigger > .49)
-            claw.setPosition(-0.5);
-        else
-            claw.setPosition(0);
+        else if(gamepad2.left_bumper)
+            claw.setPosition(ClawPositions.CLOSED);
+            //claw.setPosition(-0.7);
+       // else
+         //   claw.setPosition(0.4);
+        /*
+        if(gamepad2.right_stick_button){
+            pitchA.setPosition(1);
+            pitchB.setPosition(-1);
+        }
+
+         */
+        /*
+        int servoPos = 0
+        if( gamepad2.left_stick_x>0){
+            pitchA.servoPos += gamepad.gamepad1.left_stick_x * 0.2;
+        }
+
+        robot.setServo(robot.servoPos);
+
+         */
 
 
         //sets the factor multiplied to the power of the motors
@@ -122,17 +196,19 @@ public class TeleOPMeet2 extends OpMode {
 
         //CHANGED LEFT FRONT TO REVERSE
         leftFront.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
         leftFront.setPower(leftFrontPower * factor);
         leftBack.setPower(leftRearPower * factor);
         rightFront.setPower(rightFrontPower * factor);
         rightBack.setPower(rightRearPower * factor);
 
-        telemetry.addData("loop end", android.R.bool::new);
+       // telemetry.addData("loop end", android.R.bool::new);
+        slides.update(telemetry);
         telemetry.update();
         toggleA.updateEnd();
+        toggleB.updateEnd();
     }
 
 

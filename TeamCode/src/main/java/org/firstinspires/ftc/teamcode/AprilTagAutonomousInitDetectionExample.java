@@ -45,6 +45,8 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     private DcMotorEx back_left;
     private DcMotorEx back_right;
     private DcMotorEx clawAngle;
+    private Slide slides;
+    private Arm Arm1;
     private int leftPos;
     private int rightPos;
     OpenCvCamera camera;
@@ -84,7 +86,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1920,1080, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(1280,720, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
 
             @Override
@@ -188,6 +190,9 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         front_right = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         back_left = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         back_right = (DcMotorEx) hardwareMap.dcMotor.get("BR");
+        slides = new Slide(hardwareMap);
+        Arm1 = new Arm(hardwareMap);
+
 
 
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -197,28 +202,35 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
         front_right.setDirection(DcMotorEx.Direction.FORWARD);
-        back_left.setDirection(DcMotorEx.Direction.REVERSE);
-        back_right.setDirection(DcMotorEx.Direction.FORWARD);
+        back_left.setDirection(DcMotorEx.Direction.FORWARD);
+        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+        Arm1.setHigh();
+        slides.setLOW();
 
+        slides.update(telemetry);
+        Arm1.update(telemetry);
+        telemetry.update();
         leftPos = 0;
         rightPos = 0;
 
         /* Actually do something useful */
-        int turnVal = 750;
-        int forward = 1000;
+        int turnVal = 1100;
+        int forward = 2100 ;
 
 
 
 
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
-            drive(0.5, 40,40);
+            drive(0.5, 50,50);
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
-            drive(0.5, 675,-675);
-            drive(0.5,forward,forward);
+            drive(0.5,-65, 65);
+        //    drive(0.5, 675,-675);
+         //   drive(0.5,forward,forward);
 
 
         }else if(tagOfInterest.id == MIDDLE){
+            /*
             drive(0.5, 85,85);
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
@@ -228,16 +240,19 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             drive(0.5, 770,-770);
             drive(0.5,150,150);
 
+             */
+            drive(0.5,1200, 1200);
 
-        }else{
-            drive(0.5, 30,30);
-            drive(0.5, turnVal,-turnVal);
-            drive(0.5,forward,forward);
-            drive(0.5, -675,675);
-            drive(0.5,forward,forward);
+
+        }else {
+            drive(0.5, 55, 55);
+            drive(0.5, turnVal, -turnVal);
+            drive(0.5, forward, forward);
+            drive(0.5, 65, -65);
+            //  drive(0.5, -675,675);
+            // drive(0.5,forward,forward);
         }
-
-
+        slides.setGROUND();
 
 
         waitForStart();

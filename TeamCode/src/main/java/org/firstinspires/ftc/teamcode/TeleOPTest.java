@@ -61,7 +61,7 @@ public class TeleOPTest extends OpMode {
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
-        slideA.setDirection(DcMotor.Direction.FORWARD);
+        slideA.setDirection(DcMotor.Direction.REVERSE);
         slideB.setDirection(DcMotor.Direction.FORWARD);
         clawAngle.setDirection(DcMotor.Direction.FORWARD);
 
