@@ -27,6 +27,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -47,8 +48,11 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     private DcMotorEx clawAngle;
     private Slide slides;
     private Arm Arm1;
+
     private int leftPos;
     private int rightPos;
+    private Servo claw, pitchA, pitchB, dumbRotatingClaw;
+
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -66,7 +70,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     // UNITS ARE METERS
     double tagsize = 0.166;
 
-     // Tag ID 1,2,3 from the 36h11 family
+    // Tag ID 1,2,3 from the 36h11 family
     int LEFT = 1;
     int MIDDLE = 2;
     int RIGHT = 3;
@@ -192,18 +196,26 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         back_right = (DcMotorEx) hardwareMap.dcMotor.get("BR");
         slides = new Slide(hardwareMap);
         Arm1 = new Arm(hardwareMap);
-
+        claw = hardwareMap.servo.get("CW");
 
 
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        //old
+        /*
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
         front_right.setDirection(DcMotorEx.Direction.FORWARD);
         back_left.setDirection(DcMotorEx.Direction.FORWARD);
         back_right.setDirection(DcMotorEx.Direction.REVERSE);
+         */
+
+        front_left.setDirection(DcMotorEx.Direction.FORWARD);
+        front_right.setDirection(DcMotorEx.Direction.REVERSE);
+        back_left.setDirection(DcMotorEx.Direction.FORWARD);
+        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+
         Arm1.setHigh();
         slides.setLOW();
 
@@ -217,7 +229,27 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         int turnVal = 1100;
         int forward = 2100 ;
 
+        //Auto slides and claw
 
+        //slides.setMIDDLE();
+        openClaw();
+        sleep(1000);
+        closeClaw();
+        drive(0.5, 1500,1500);
+        //sleep(1000);
+        turnR(0.5, 750, 750);
+        //sleep(1000);
+        // sliderA.setPower(0.5);
+        //sliderB.setPower(0.5);
+        drive(0.5, 950,950);
+        //slides.setHIGH(); //set slides middle
+        sleep(1500);
+        slides.setHIGH();
+        sleep(1500);
+        //drive(0.5,-150,-150);
+
+        slides.update(telemetry);
+        Arm1.update(telemetry);
 
 
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
@@ -225,8 +257,8 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
             drive(0.5,-65, 65);
-        //    drive(0.5, 675,-675);
-         //   drive(0.5,forward,forward);
+            //    drive(0.5, 675,-675);
+            //   drive(0.5,forward,forward);
 
 
         }else if(tagOfInterest.id == MIDDLE){
@@ -244,7 +276,9 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             drive(0.5,1200, 1200);
 
 
-        }else {
+        }
+
+        else {
             drive(0.5, 55, 55);
             drive(0.5, turnVal, -turnVal);
             drive(0.5, forward, forward);
@@ -252,6 +286,8 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             //  drive(0.5, -675,675);
             // drive(0.5,forward,forward);
         }
+
+
         slides.setGROUND();
 
 
@@ -270,6 +306,60 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
+
+    private void turnR(double speed, int leftTarget, int rightTarget){
+
+        //Drive
+        leftPos += leftTarget;
+        rightPos += rightTarget;
+
+        front_left.setTargetPosition(-leftPos);
+        back_left.setTargetPosition(-leftPos);
+
+        front_right.setTargetPosition(rightPos);
+        back_right.setTargetPosition(rightPos);
+
+        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        front_left.setPower(speed);
+        front_right.setPower(speed);
+        back_left.setPower(speed);
+        back_right.setPower(speed);
+
+        while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
+            idle();
+        }
+    }
+    private void turnL(double speed, int leftTarget, int rightTarget){
+
+        //Drive
+        leftPos += leftTarget;
+        rightPos += rightTarget;
+
+        front_left.setTargetPosition(leftPos);
+        back_left.setTargetPosition(leftPos);
+
+        front_right.setTargetPosition(-rightPos);
+        back_right.setTargetPosition(-rightPos);
+
+        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        front_left.setPower(speed);
+        front_right.setPower(speed);
+        back_left.setPower(speed);
+        back_right.setPower(speed);
+
+        while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
+            idle();
+        }
+    }
+
 
     private void drive(double speed, int leftTarget, int rightTarget){
         leftPos += leftTarget;
@@ -296,6 +386,22 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         }
 
         //leftFront.setVelocity(10, AngleUnit.RADIANS);
+    }
+    public void lift(){
+        slides.setMIDDLE();
+    }
+
+    public void openClaw(){
+        claw.setPosition(ClawPositions.OPEN);
+    }
+
+    public void closeClaw(){
+        claw.setPosition(ClawPositions.CLOSED);
+    }
+
+    public void dropLift(){
+        //change maybe to aboveG
+        slides.setGROUND();
     }
 
 }

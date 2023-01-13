@@ -1,3 +1,5 @@
+
+
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
@@ -107,6 +109,7 @@ public class TeleOPMeet2 extends OpMode {
             telemetry.addData("left bumper",android.R.bool::new);
            // telemetry.update();
             slides.setAboveG();
+            //slides.setHIGH();
         //    slides.update(telemetry);
 
         }
@@ -125,13 +128,13 @@ public class TeleOPMeet2 extends OpMode {
           //  slides.update(telemetry);
         }
 
-        if(gamepad2.right_bumper){
+        if(gamepad2.right_trigger >= 0.49){
             dumbRotatingClaw.setPosition(0.5);
         }
 
 
 
-        else if(gamepad2.left_bumper){
+        else if(gamepad2.left_trigger>= 0.49){
             val -=0.01;
             dumbRotatingClaw.setPosition(val);
         }
