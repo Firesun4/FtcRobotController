@@ -25,15 +25,16 @@ public class EncoderAuto extends LinearOpMode {
     private int leftPos;
     private int rightPos;
 
-    public void initialize(){
+    /*public void initialize(){
+
+    }
+    */
+    @Override
+    public void runOpMode(){
+        //initialize();
         slides = new Slide(hardwareMap);
         Arm1 = new Arm(hardwareMap);
         claw = hardwareMap.servo.get("CW");
-    }
-
-    @Override
-    public void runOpMode(){
-        initialize();
         CVDetect = new AprilTagAutonomousInitDetectionExample();
         //CVDetect.runOpMode();
         front_left = (DcMotorEx) hardwareMap.dcMotor.get("FL");
@@ -56,20 +57,29 @@ public class EncoderAuto extends LinearOpMode {
 
 
         waitForStart();
+
+        slides.setHIGH();
+        while(opModeIsActive() && !isStopRequested()){
+            slides.update(telemetry);
+        }
+        drive(0.5,1000,1000);
+
         //slides.setMIDDLE();
+        /*
         openClaw();
         sleep(1000);
         closeClaw();
         drive(0.5, 1500,1500);
-        sleep(300);
+        //sleep(300);
         turnR(0.5, 750, 750);
-        sleep(1000);
+        drive(0.5, 950,950);
+        //sleep(1000);
         //sleep(1000);
         // sliderA.setPower(0.5);
         //sliderB.setPower(0.5);
-        drive(0.5, 950,950);
         //slides.setHIGH(); //set slides middle
-        sleep(1500);
+        //sleep(1500);
+        sleep(1000);
         slides.setHIGH();
         sleep(1500);
         //drive(0.5,-150,-150);
@@ -78,6 +88,8 @@ public class EncoderAuto extends LinearOpMode {
         Arm1.update(telemetry);
         //telemetry.update();
         // CVDetect.doStuff();  // makes it work
+
+         */
 
 
     }

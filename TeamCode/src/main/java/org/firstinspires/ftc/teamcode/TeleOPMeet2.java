@@ -25,10 +25,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class TeleOPMeet2 extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx leftFront, leftBack, rightFront, rightBack; //slideA, slideB;
-    private Servo claw, pitchA, pitchB, dumbRotatingClaw;
+    private Servo claw, pitchA, pitchB;
    // private CRServo pitchA, pitchB;
     private boolean direction, togglePrecision;
     private double factor;
+    private Claw dumbRotatingClaw;
     private Arm Arm1;
     private Slide slides;
     boolean reverse;
@@ -45,9 +46,9 @@ public class TeleOPMeet2 extends OpMode {
         leftBack = (DcMotorEx) hardwareMap.dcMotor.get("BL");
         rightFront = (DcMotorEx) hardwareMap.dcMotor.get("FR");
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
-        claw = (Servo) hardwareMap.get("CW");
-
-        dumbRotatingClaw = (Servo) hardwareMap.get("CC");
+        //claws = (Servo) hardwareMap.get("CW");
+        //dumbRotatingClaw = (Servo) hardwareMap.get("CC");
+        claw = hardwareMap.servo.get("CW");
         //slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
         //slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
       //  pitchA = (CRServo) hardwareMap.crservo.get("PA");
@@ -96,6 +97,14 @@ public class TeleOPMeet2 extends OpMode {
             togglePrecision = true;
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
+
+        if(gamepad1.right_bumper){
+            dumbRotatingClaw.toggleWristRotate();
+        }
+
+        else if(gamepad1.left_bumper){
+            dumbRotatingClaw.toggleWristRotate();
+        }
         if (gamepad2.dpad_up) {
             telemetry.addData("up bumper",android.R.bool::new);
           //  telemetry.update();
@@ -128,17 +137,7 @@ public class TeleOPMeet2 extends OpMode {
           //  slides.update(telemetry);
         }
 
-        if(gamepad2.right_trigger >= 0.49){
-            val+=0.01;
-            dumbRotatingClaw.setPosition(val);
-        }
 
-
-
-        else if(gamepad2.left_trigger>= 0.49){
-            val -=0.01;
-            dumbRotatingClaw.setPosition(val);
-        }
 
 
 
