@@ -219,9 +219,9 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         Arm1.setHigh();
         slides.setLOW();
 
-        slides.update(telemetry);
-        Arm1.update(telemetry);
-        telemetry.update();
+       // slides.update(telemetry);
+       // Arm1.update(telemetry);
+       // telemetry.update();
         leftPos = 0;
         rightPos = 0;
 
@@ -251,7 +251,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         slides.update(telemetry);
         Arm1.update(telemetry);
 
-
+        /*
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
             drive(0.5, 50,50);
             drive(0.5, -turnVal,turnVal);
@@ -262,7 +262,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 
 
         }else if(tagOfInterest.id == MIDDLE){
-            /*
+
             drive(0.5, 85,85);
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
@@ -272,20 +272,23 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             drive(0.5, 770,-770);
             drive(0.5,150,150);
 
-             */
-            drive(0.5,1200, 1200);
+
+        drive(0.5,1200, 1200);
 
 
-        }
+    }
 
         else {
-            drive(0.5, 55, 55);
-            drive(0.5, turnVal, -turnVal);
-            drive(0.5, forward, forward);
-            drive(0.5, 65, -65);
-            //  drive(0.5, -675,675);
-            // drive(0.5,forward,forward);
-        }
+    drive(0.5, 55, 55);
+    drive(0.5, turnVal, -turnVal);
+    drive(0.5, forward, forward);
+    drive(0.5, 65, -65);
+    //  drive(0.5, -675,675);
+    // drive(0.5,forward,forward);
+}
+
+         */
+
 
 
         slides.setGROUND();

@@ -129,7 +129,8 @@ public class TeleOPMeet2 extends OpMode {
         }
 
         if(gamepad2.right_trigger >= 0.49){
-            dumbRotatingClaw.setPosition(0.5);
+            val+=0.01;
+            dumbRotatingClaw.setPosition(val);
         }
 
 

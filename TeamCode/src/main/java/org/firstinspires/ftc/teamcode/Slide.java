@@ -79,11 +79,12 @@ public class Slide {
         }
     }
 
+    public void setCustom(double x){targetPos = x;}
     public void setGROUND(){
         targetPos = ZERO_POSITION;
     }
     public void setAboveG(){
-        targetPos = 250;
+        targetPos = 300;
     }
 
     public void setLOW(){
@@ -96,6 +97,8 @@ public class Slide {
 
     public void setHIGH(){
         targetPos = HIGH_JUNCTION;
+
+
     }
 
     public void setManualSlide(int increment){
