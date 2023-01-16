@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -38,7 +39,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "NewCVAuto")
+@Autonomous(name = "selfDestruct")
 public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 {
     private DcMotorEx front_left;
@@ -48,10 +49,12 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     private DcMotorEx clawAngle;
     private Slide slides;
     private Arm Arm1;
+    private ElapsedTime timer;
+    //private Servo;
 
     private int leftPos;
     private int rightPos;
-    private Servo claw, pitchA, pitchB, dumbRotatingClaw;
+    private Servo claw;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -80,6 +83,16 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     @Override
     public void runOpMode()
     {
+        claw = hardwareMap.servo.get("CW");
+     //   pitchA = hardwareMap.servo.get("PA");
+      //  pitchB = hardwareMap.servoq.get("PB");
+
+
+    //    pitchA.setPosition(0.8);
+     //   pitchB.setPosition(0.2);
+     //   sleep(500);
+//        pitchB.setPosition(0.2);
+        claw.setPosition(ClawPositions.CLOSED);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -169,7 +182,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             }
 
             telemetry.update();
-            sleep(20);
+            //sleep(20);
         }
 
         /*
@@ -196,7 +209,8 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         back_right = (DcMotorEx) hardwareMap.dcMotor.get("BR");
         slides = new Slide(hardwareMap);
         Arm1 = new Arm(hardwareMap);
-        claw = hardwareMap.servo.get("CW");
+       // pitchA = hardwareMap.servo.get("PA");
+       // pitchB = hardwareMap.servo.get("PB");
 
 
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -216,8 +230,8 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         back_left.setDirection(DcMotorEx.Direction.FORWARD);
         back_right.setDirection(DcMotorEx.Direction.REVERSE);
 
-        Arm1.setHigh();
-        slides.setLOW();
+        //Arm1.setHigh();
+        //slides.setLOW();
 
        // slides.update(telemetry);
        // Arm1.update(telemetry);
@@ -232,37 +246,110 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         //Auto slides and claw
 
         //slides.setMIDDLE();
+
+
+        //drive(0.5,1500, 1500)
+        /*drive(0.5, 2200,2200);
+        sleep(2000);
+
+        turnR(0.5, 10, 0);
+        sleep(110000000);
         openClaw();
-        sleep(1000);
+        sleep(2000);
+        slides.setAboveG();
+        sleep(2000);
+        drive(0.5, 500,500);
+        sleep(2000);
         closeClaw();
-        drive(0.5, 1500,1500);
-        //sleep(1000);
-        turnR(0.5, 750, 750);
+        sleep(2000);
+        turnR(0.5,1500,1500);
+        sleep(2000);
+        drive(0.5,750,750);
+        sleep(2000);
+        turnL(0.5,100,100);
+        sleep(2000);
+        slides.setMIDDLE();
+        sleep(2000);
+        drive(0.5,50,50);
+        sleep(2000);
+        openClaw();
+        sleep(2000);
+        //slides.setAboveG();
+        
+
+
+        //sleep(1500);
+        /*
         //sleep(1000);
         // sliderA.setPower(0.5);
         //sliderB.setPower(0.5);
-        drive(0.5, 950,950);
+        drive(0.5, 600,600);
+        //turnR(0.5, 1250, 1250);
         //slides.setHIGH(); //set slides middle
         sleep(1500);
-        slides.setHIGH();
-        sleep(1500);
+        //turnR(0.5,750,750);
+        //slides.setHIGH();
+       // sleep(500);
         //drive(0.5,-150,-150);
 
-        slides.update(telemetry);
-        Arm1.update(telemetry);
+       // slides.update(telemetry);
+        //Arm1.update(telemetry);
 
-        /*
+         */
+
+
+
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
+           // pitchA.setPosition(0.2);
+           //pitchB.setPosition(0.8);
+            claw.setPosition(ClawPositions.CLOSED);
+            //timer = new ElapsedTime();
+            drive(0.5,50,50);
+            drive(0.5, 1175, 1175);
+            timer = new ElapsedTime();
+            slides.setHIGH();
+            sleep(1000);
+
+
+            while(opModeIsActive() && !isStopRequested() && timer.milliseconds() < 4000){
+                slides.update(telemetry);
+            }
+            drive(0.5,-655,655);
+            //drive(0.5,(forward/2)+75,(forward/2)+75);
+
+
+
+            //drive(0.5,-30,30);
+            sleep(1000);
+            claw.setPosition(ClawPositions.OPEN);
+            sleep(1000);
+            drive(0.5, -50, -50);
+            drive(0.5, -585, 585);
+            drive(0.5, 50, 50);
+            timer = new ElapsedTime();
+            slides.setGROUND();
+            while(opModeIsActive() && !isStopRequested() && timer.milliseconds() < 4000){
+                slides.update(telemetry);
+            }
+            sleep(1000);
+            drive(0.1,1,1);
+
+
+
+
+            /*
             drive(0.5, 50,50);
             drive(0.5, -turnVal,turnVal);
-            drive(0.5,forward,forward);
-            drive(0.5,-65, 65);
+            drive(0.5,forward/2,forward/2);
+            drive(0.5,-50, 50);
+
+             */
             //    drive(0.5, 675,-675);
             //   drive(0.5,forward,forward);
 
 
         }else if(tagOfInterest.id == MIDDLE){
-
+            /*
             drive(0.5, 85,85);
             drive(0.5, -turnVal,turnVal);
             drive(0.5,forward,forward);
@@ -272,29 +359,101 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             drive(0.5, 770,-770);
             drive(0.5,150,150);
 
+             */
 
-        drive(0.5,1200, 1200);
+           // pitchA.setPosition(0.3);
+           // pitchB.setPosition(0.7);
+            claw.setPosition(ClawPositions.CLOSED);
+            //timer = new ElapsedTime();
+            drive(0.5,50,50);
+            drive(0.5, 1175, 1175);
+            timer = new ElapsedTime();
+            slides.setHIGH();
+            sleep(1000);
 
 
-    }
+            while(opModeIsActive() && !isStopRequested() && timer.milliseconds() < 4000){
+                slides.update(telemetry);
+            }
+            drive(0.5,-655,655);
+            //drive(0.5,(forward/2)+75,(forward/2)+75);
+
+
+
+            //drive(0.5,-30,30);
+            sleep(500);
+            claw.setPosition(ClawPositions.OPEN);
+            sleep(1000);
+            drive(0.5, -50, -50);
+            drive(0.5, 600, -600);
+            drive(0.5, 50, 50);
+            timer = new ElapsedTime();
+            slides.setGROUND();
+            while(opModeIsActive() && !isStopRequested() && timer.milliseconds() < 4000){
+                slides.update(telemetry);
+            }
+            sleep(1000);
+            drive(0.1,1,1);
+
+        }
 
         else {
-    drive(0.5, 55, 55);
-    drive(0.5, turnVal, -turnVal);
-    drive(0.5, forward, forward);
-    drive(0.5, 65, -65);
+          //  pitchA.setPosition(0.3);
+           // pitchB.setPosition(0.7);
+            claw.setPosition(ClawPositions.CLOSED);
+            //timer = new ElapsedTime();
+            drive(0.5,50,50);
+            drive(0.5, 1175, 1175);
+            timer = new ElapsedTime();
+            slides.setHIGH();
+            sleep(1000);
+
+
+            while(opModeIsActive() && !isStopRequested() && timer.milliseconds() < 4000){
+                slides.update(telemetry);
+            }
+            drive(0.5,-655,655);
+            //drive(0.5,(forward/2)+75,(forward/2)+75);
+
+
+
+            //drive(0.5,-30,30);
+            sleep(1000);
+            claw.setPosition(ClawPositions.OPEN);
+            sleep(1000);
+            drive(0.5, -50, -50);
+            drive(0.5, 1800, -1800);
+            drive(0.5, 50, 50);
+            timer = new ElapsedTime();
+            slides.setGROUND();
+            while(opModeIsActive() && !isStopRequested() && timer.milliseconds() < 4000){
+                slides.update(telemetry);
+            }
+            sleep(1000);
+            drive(0.1,1,1);
+
+
+            /*
+            drive(0.5, 55, 55);
+            drive(0.5, turnVal, -turnVal);
+            drive(0.5, forward/2, forward/2);
+            drive(0.5, 50, -50);
+            slides.setAboveG();
+
+             */
+
     //  drive(0.5, -675,675);
     // drive(0.5,forward,forward);
 }
 
-         */
 
 
 
-        slides.setGROUND();
+
+       // slides.setGROUND();
 
 
-        waitForStart();
+        //waitForStart();
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         //while (opModeIsActive()) {sleep(20);}
     }
@@ -309,7 +468,33 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
+    private void drive(double speed, int leftTarget, int rightTarget){
+        leftPos += leftTarget;
+        rightPos += rightTarget;
 
+        front_left.setTargetPosition(-leftPos);
+        back_left.setTargetPosition(leftPos);
+
+        front_right.setTargetPosition(-rightPos);
+        back_right.setTargetPosition(rightPos);
+
+        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        front_left.setPower(speed);
+        front_right.setPower(speed);
+        back_left.setPower(speed);
+        back_right.setPower(speed);
+
+        while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
+            idle();
+        }
+
+        //leftFront.setVelocity(10, AngleUnit.RADIANS);
+    }
+    /*
     private void turnR(double speed, int leftTarget, int rightTarget){
 
         //Drive
@@ -336,6 +521,9 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             idle();
         }
     }
+
+     */
+    /*
     private void turnL(double speed, int leftTarget, int rightTarget){
 
         //Drive
@@ -364,32 +552,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     }
 
 
-    private void drive(double speed, int leftTarget, int rightTarget){
-        leftPos += leftTarget;
-        rightPos += rightTarget;
 
-        front_left.setTargetPosition(leftPos);
-        back_left.setTargetPosition(leftPos);
-
-        front_right.setTargetPosition(rightPos);
-        back_right.setTargetPosition(rightPos);
-
-        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        back_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        front_left.setPower(speed);
-        front_right.setPower(speed);
-        back_left.setPower(speed);
-        back_right.setPower(speed);
-
-        while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
-            idle();
-        }
-
-        //leftFront.setVelocity(10, AngleUnit.RADIANS);
-    }
     public void lift(){
         slides.setMIDDLE();
     }
@@ -406,5 +569,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         //change maybe to aboveG
         slides.setGROUND();
     }
+
+     */
 
 }

@@ -63,6 +63,7 @@ public class EncoderAuto extends LinearOpMode {
             slides.update(telemetry);
         }
         drive(0.5,1000,1000);
+        turnR(0.5,1000, 1000);
 
         //slides.setMIDDLE();
         /*
@@ -143,9 +144,9 @@ public class EncoderAuto extends LinearOpMode {
         back_left.setPower(speed);
         back_right.setPower(speed);
 
-        while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
-            idle();
-        }
+        //while(opModeIsActive() && front_left.isBusy() && front_right.isBusy()&& back_left.isBusy() && back_right.isBusy()){
+          //  idle();
+        //}
     }
 
     private void turnL(double speed, int leftTarget, int rightTarget){

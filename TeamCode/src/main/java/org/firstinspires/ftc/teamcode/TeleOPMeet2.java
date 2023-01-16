@@ -29,12 +29,14 @@ public class TeleOPMeet2 extends OpMode {
    // private CRServo pitchA, pitchB;
     private boolean direction, togglePrecision;
     private double factor;
-    private Claw dumbRotatingClaw;
+    //private Servo dumbRotatingClaw;
     private Arm Arm1;
     private Slide slides;
     boolean reverse;
     final int balls = 3;
     public double val;
+    public double val2 = 0.5;
+
     private EasyToggle toggleA = new EasyToggle("a", false, 1, false, false);
     private EasyToggle toggleB = new EasyToggle("b", false, 2, false, true);
     @Override
@@ -48,6 +50,7 @@ public class TeleOPMeet2 extends OpMode {
         rightBack = (DcMotorEx) hardwareMap.dcMotor.get("BR");
         //claws = (Servo) hardwareMap.get("CW");
         //dumbRotatingClaw = (Servo) hardwareMap.get("CC");
+        //dumbRotatingClaw = new Claw(hardwareMap);
         claw = hardwareMap.servo.get("CW");
         //slideA = (DcMotorEx) hardwareMap.dcMotor.get("SA");
         //slideB = (DcMotorEx) hardwareMap.dcMotor.get("SB");
@@ -98,18 +101,30 @@ public class TeleOPMeet2 extends OpMode {
         else if (gamepad1.right_stick_button)
             togglePrecision = false;
 
-        if(gamepad1.right_bumper){
-            dumbRotatingClaw.toggleWristRotate();
+       // if(gamepad1.right_bumper){
+      //      dumbRotatingClaw.toggleWristRotate();
+    //    }
+
+      //  else if(gamepad1.left_bumper){
+       //     dumbRotatingClaw.toggleWristRotate();
+        //}
+
+        if(gamepad1.a ){
+            val2+= 0.1;
+            pitchA.setPosition(1-val2);
+            pitchB.setPosition(val2);
+        }
+        else if(gamepad1.b){
+            val2-=0.1;
+            pitchA.setPosition(1-val2);
+            pitchB.setPosition(val2);
         }
 
-        else if(gamepad1.left_bumper){
-            dumbRotatingClaw.toggleWristRotate();
-        }
         if (gamepad2.dpad_up) {
             telemetry.addData("up bumper",android.R.bool::new);
           //  telemetry.update();
             slides.setHIGH();
-            Arm1.setHigh();
+          //  Arm1.setHigh();
             //slideA.setPower(1);
             //slideB.setPower(1);
          //   slides.update(telemetry);
@@ -187,6 +202,7 @@ public class TeleOPMeet2 extends OpMode {
         factor = togglePrecision ? .3 : 1.5; //the power is 1/5th of its normal value while in precision mode
 
         // Do not mess with this, if it works, it works
+        /*
         double x = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
         double stickAngle = Math.atan2(direction ? -gamepad1.left_stick_y : gamepad1.left_stick_y, direction ? gamepad1.left_stick_x : -gamepad1.left_stick_x); // desired robot angle from the angle of stick
         double powerAngle = stickAngle - (Math.PI / 4); // conversion for correct power values
@@ -195,6 +211,19 @@ public class TeleOPMeet2 extends OpMode {
         final double leftRearPower = Range.clip(x * Math.sin(powerAngle) - rightX, -1.0, 1.0);
         final double rightFrontPower = Range.clip(x * Math.sin(powerAngle) + rightX, -1.0, 1.0);
         final double rightRearPower = Range.clip(x * Math.cos(powerAngle) + rightX, -1.0, 1.0);
+
+         */
+        double x = Math.hypot(gamepad1.right_stick_x, gamepad1.left_stick_y);
+        double stickAngle = Math.atan2(direction ? -gamepad1.left_stick_y : gamepad1.left_stick_y, direction ? gamepad1.right_stick_x : -gamepad1.right_stick_x); // desired robot angle from the angle of stick
+        double powerAngle = stickAngle - (Math.PI / 4); // conversion for correct power values
+        double rightX = gamepad1.left_stick_x; // right stick x axis controls turning
+        final double leftFrontPower = Range.clip(x * Math.cos(powerAngle) - rightX, -1.0, 1.0);
+        final double leftRearPower = Range.clip(x * Math.sin(powerAngle) - rightX, -1.0, 1.0);
+        final double rightFrontPower = Range.clip(x * Math.sin(powerAngle) + rightX, -1.0, 1.0);
+        final double rightRearPower = Range.clip(x * Math.cos(powerAngle) + rightX, -1.0, 1.0);
+
+
+
 
 
         //CHANGED LEFT FRONT TO REVERSE
